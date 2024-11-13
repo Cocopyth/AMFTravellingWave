@@ -1,0 +1,47 @@
+[tool.poetry]
+name = "AMFTrack"
+version = "0.1.0"
+description = "A description of your project"
+authors = ["Your Name <your.email@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+scipy = "^1.9"
+pandas = "^1.5"
+networkx = "^2.8"
+matplotlib = "^3.6"
+pymatreader = "^0.0.23"
+numpy = "^1.23"
+opencv-python = "^4.6"
+imageio = "^2.22"
+pycpd = "^1.0"
+cython = "^0.29"
+bresenham = "^0.2"
+Shapely = "^1.8"
+tqdm = "^4.64"
+dropbox = "^11.34"
+ipympl = "^0.9"
+nodejs = "^0.1.0" # Node.js managed version; may require external handling if not from PyPI
+setuptools = "^65.5"
+python-decouple = "^3.7"
+typing = "^3.7" # Replace with `typing-extensions` if using Python 3.8+
+imageio-ffmpeg = "^0.4"
+geopandas = "^0.12"
+statsmodels = "^0.13"
+openpyxl = "^3.0"
+seaborn = "^0.13.2"
+scikit-image = "^0.24.0"
+numba = "^0.60.0"
+open3d = "^0.18.0"
+
+[tool.poetry.dependencies.tensorflow]
+optional = true
+version = "^2.9"
+
+[tool.poetry.dependencies.keras-tuner]
+optional = true
+version = "^1.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

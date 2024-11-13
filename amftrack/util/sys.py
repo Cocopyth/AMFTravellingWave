@@ -424,7 +424,8 @@ def get_analysis_info(directory, suffix_analysis_info=""):
 
 
 def get_analysis_folders(path=path_analysis):
-    analysis_folders = pd.DataFrame()
+    analysis_folders_list = []  # Store each infos DataFrame here
+
     for dire in os.walk(path):
         name_analysis = dire[0].split(os.sep)[-1].split("_")
         if name_analysis[0] == "Analysis":
@@ -432,7 +433,7 @@ def get_analysis_folders(path=path_analysis):
             path_save = os.path.join(analysis_dir, "folder_info.json")
             if os.path.exists(path_save):
                 folders_plate = pd.read_json(path_save)
-                infos = folders_plate.iloc[0][1:10]
+                infos = folders_plate.iloc[0][1:10].copy()  # Copy to avoid SettingWithCopyWarning
                 infos["total_path"] = analysis_dir
                 infos["time_plate"] = os.path.isfile(
                     os.path.join(analysis_dir, "time_plate_info.json")
@@ -443,18 +444,20 @@ def get_analysis_folders(path=path_analysis):
                 infos["time_hypha"] = os.path.isdir(
                     os.path.join(analysis_dir, "time_hypha_info.json")
                 )
-
                 infos["num_folders"] = len(folders_plate)
-                analysis_folders = pd.concat([analysis_folders, infos], axis=1)
 
-    analysis_folders = analysis_folders.transpose().reset_index().drop("index", axis=1)
+                # Append the infos DataFrame to the list
+                analysis_folders_list.append(infos)
+
+    # Concatenate all infos DataFrames at once
+    analysis_folders = pd.concat(analysis_folders_list, axis=1).transpose().reset_index(drop=True)
     analysis_folders["unique_id"] = (
-        analysis_folders["Plate"].astype(str)
-        + "_"
-        + analysis_folders["CrossDate"].astype(str).str.replace("'", "")
+            analysis_folders["Plate"].astype(str)
+            + "_"
+            + analysis_folders["CrossDate"].astype(str).str.replace("'", "")
     )
-    return analysis_folders
 
+    return analysis_folders
 
 def get_time_plate_info_from_analysis(analysis_folders, use_saved=True):
     plates_in = analysis_folders["unique_id"].unique()
@@ -466,43 +469,45 @@ def get_time_plate_info_from_analysis(analysis_folders, use_saved=True):
     if os.path.exists(path_save_info) and use_saved:
         time_plate_info = pd.read_json(path_save_info)
         folders = pd.read_json(path_save_folders)
-        return (folders, time_plate_info)
+        return folders, time_plate_info
+
     analysis_dirs = analysis_folders["total_path"]
-    time_plate_info = pd.DataFrame()
-    folders = pd.DataFrame()
+    time_plate_info_list = []  # Store each table as a separate DataFrame in a list
+    folders_list = []  # Store each folders_plate DataFrame here
+
     for analysis_dir in analysis_dirs:
         path_save = os.path.join(analysis_dir, "time_plate_info.json")
-        table = pd.read_json(path_save)
-        table = table.transpose()
-        table = table.fillna(-1)
+        table = pd.read_json(path_save).transpose().fillna(-1)
+
         path_save = os.path.join(analysis_dir, "folder_info.json")
-        folders_plate = pd.read_json(path_save)
-        folders_plate = folders_plate.reset_index()
-        table = pd.concat(
-            (table, (folders_plate["datetime"] - folders_plate["datetime"].iloc[0])),
-            axis=1,
-        )
-        table = table.rename(columns={"datetime": "time_since_begin"})
-        table["time_since_begin_h"] = table["time_since_begin"].copy() / np.timedelta64(
-            1, "h"
-        )
-        table = pd.concat((table, pd.DataFrame(folders_plate.index.values)), axis=1)
-        table = table.rename(columns={0: "timestep"})
-        table = pd.concat((table, (folders_plate["folder"])), axis=1)
-        table = pd.concat((table, (folders_plate["unique_id"])), axis=1)
-        table = pd.concat((table, (folders_plate["datetime"])), axis=1)
+        folders_plate = pd.read_json(path_save).reset_index()
+
+        # Calculate time since beginning and add as new columns
+        time_since_begin = folders_plate["datetime"] - folders_plate["datetime"].iloc[0]
+        table["time_since_begin"] = time_since_begin
+        table["time_since_begin_h"] = time_since_begin / np.timedelta64(1, "h")
+        table["timestep"] = folders_plate.index.values
+        table["folder"] = folders_plate["folder"]
+        table["unique_id"] = folders_plate["unique_id"]
+        table["datetime"] = folders_plate["datetime"]
+
+        # Add optional columns if they exist
         for column in ["PrincePos", "root", "strain", "medium"]:
-            try:
-                table = pd.concat((table, (folders_plate[column])), axis=1)
-            except KeyError:
-                continue
-        time_plate_info = pd.concat([time_plate_info, table], ignore_index=True)
-        folders = pd.concat(
-            [folders.copy(), folders_plate.copy()], axis=0, ignore_index=True
-        )
+            if column in folders_plate:
+                table[column] = folders_plate[column]
+
+        time_plate_info_list.append(table)  # Append to the list instead of concatenating immediately
+        folders_list.append(folders_plate)  # Append folders_plate to list
+
+    # Concatenate all tables at once
+    time_plate_info = pd.concat(time_plate_info_list, ignore_index=True)
+    folders = pd.concat(folders_list, ignore_index=True)
+
+    # Save to JSON files
     time_plate_info.to_json(path_save_info)
     folders.to_json(path_save_folders)
-    return (folders, time_plate_info)
+
+    return folders, time_plate_info
 
 
 def get_global_hypha_info_from_analysis(analysis_folders, use_saved=True):

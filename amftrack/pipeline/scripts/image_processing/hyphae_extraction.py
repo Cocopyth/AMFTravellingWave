@@ -8,7 +8,7 @@ from amftrack.pipeline.functions.image_processing.experiment_class_surf import (
     Experiment,
     save_graphs,
 )
-
+from amftrack.pipeline.functions.image_processing.experiment_util import get_ROI
 import pandas as pd
 import json
 from time import time_ns
@@ -82,4 +82,10 @@ for index in indexes:
     exp.save_location = dirName
     exp.pickle_save(f"{dirName}/")
     select_folders.to_json(f"{dirName}/folder_info.json")
+    ROI = get_ROI(exp, 0)
+    polygon_geojson = ROI.__geo_interface__
+
+    # Save the GeoJSON to a file
+    with open(f"{dirName}/ROI.geojson", "w") as geojson_file:
+        json.dump(polygon_geojson, geojson_file)
     start = stop

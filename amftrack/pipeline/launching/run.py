@@ -103,6 +103,42 @@ def run(
             pbar.update(1)
 
 
+def run_function(
+    process,
+    args: List,
+    folders: pd.DataFrame,
+    per_unique_id=False,
+    sequential_process=False,
+) -> None:
+    """
+    Run the chosen script `code` localy.
+    :param code: name of the script file such as "prune.py", it has to be in the image_processing file
+    :param args: list of arguments used by the script
+    """
+    op_id = time_ns()
+    folders.to_json(f"{temp_path}/{op_id}.json")  # temporary file
+    folder_list = list(folders["folder"])
+    folder_list.sort()
+    args += [op_id, 0]
+    if per_unique_id:
+        unique_ids = list(set(folders["unique_id"].values))
+        with tqdm(total=len(unique_ids), desc="plates_treated") as pbar:
+            for index, folder in enumerate(unique_ids):
+                args[-1] = index
+                process(args)
+                pbar.update(1)
+    else:
+        with tqdm(total=len(folder_list), desc="folder_treated") as pbar:
+            if sequential_process:
+                last_index = len(folder_list) - 1
+            else:
+                last_index = len(folder_list)
+            for index, folder in enumerate(folder_list[:last_index]):
+                args[-1] = index
+                process(args)
+                pbar.update(1)
+
+
 def run_post_process(
     code: str,
     list_f,

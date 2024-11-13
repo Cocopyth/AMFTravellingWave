@@ -89,6 +89,10 @@ def has_test_plate():
     else:
         return False
 
+def make_folders(directory):
+    update_plate_info(directory)
+    folder_df = get_current_folders(directory)
+    return folder_df
 
 def make_experiment_object():
     "Build an experiment object using the plate that is in the test repository."
@@ -112,9 +116,8 @@ def make_experiment_object():
     return exp
 
 
-def make_experiment_object_analysis():
+def make_experiment_object_analysis(directory = test_path):
     "Build an experiment object using the plate that is in the test repository."
-    directory = test_path
     plate_name = "111111_20600101"  # TODO(FK): find the name automaticaly (can be different based on the person)
     update_analysis_info(directory)
 

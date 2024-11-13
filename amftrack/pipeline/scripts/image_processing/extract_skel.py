@@ -91,5 +91,5 @@ sio.savemat(
     {"skeleton": scipy.sparse.csc_matrix(skeletonized)},
 )
 compressed = cv2.resize(skeletonized, (dim[1] // 5, dim[0] // 5))
-sio.savemat(path_snap + "/Analysis/skeleton_compressed.mat", {"skeleton": compressed})
+sio.savemat(path_snap + "/Analysis/skeleton.mat", {"skeleton": compressed})
 print("time=", time() - t)

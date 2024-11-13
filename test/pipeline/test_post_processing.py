@@ -25,23 +25,25 @@ import numpy as np
 
 mpl.use("AGG")
 
+path_data = os.path.join(os.path.dirname(os.path.abspath(__file__)),'data/')
 
 class TestExperiment(unittest.TestCase):
     """Tests that need only a static plate with one timestep"""
 
     @classmethod
     def setUpClass(cls):
-        cls.exp = helper.make_experiment_object_analysis()
+        cls.exp = helper.make_experiment_object_analysis(path_data)
 
     def tearDown(self):
         "Runs after each test"
         plt.close("all")
 
-    def test_exp_plot_f(self):
-        fs = dir(exp_plot)
-        plot_fs = [f for f in fs if f.split("_")[0] == "plot"]
-        for f in plot_fs:
-            getattr(exp_plot, f)(self.exp)
+    # def test_exp_plot_f(self):
+    #     fs = dir(exp_plot)
+    #     plot_fs = [f for f in fs if f.split("_")[0] == "plot"]
+    #     for f in plot_fs:
+    #         getattr(exp_plot, f)(self.exp)
+    #This will only run properly if dropbox is setup
 
     def test_time_plate_f(self):
         fs = dir(time_plate)

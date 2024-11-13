@@ -1,77 +1,14 @@
-import os.path
-
-from shapely.geometry import Polygon, Point
-from scipy import spatial
 from amftrack.pipeline.functions.image_processing.experiment_class_surf import (
     Experiment,
-    Node,
-    Edge,
+
 )
 from amftrack.pipeline.functions.post_processing.area_hulls_util import *
-from amftrack.pipeline.functions.post_processing.util import (
-    is_in_study_zone,
-)
-from amftrack.util.sys import temp_path
+
 import numpy as np
-import pandas as pd
-import networkx as nx
-import pickle
 import shapely.speedups
-import scipy
+
 
 shapely.speedups.enable()
-
-
-from amftrack.pipeline.functions.image_processing.experiment_class_surf import (
-    Edge,
-    Node,
-)
-
-
-
-
-# def get_speed_in_ring(hull1, hull2, t, exp, rh_only, op_id):
-#     hyphae_ring = get_hyphae_in_ring(hull1, hull2, t, exp)
-#     hyphae_ring = [hyph.end.label for hyph in hyphae_ring]
-#     plate = exp.folders["Plate"].unique()[0]
-#     time_plate_info, global_hypha_info, time_hypha_info = get_data_tables(
-#         op_id, redownload=False
-#     )
-#     table = global_hypha_info.loc[global_hypha_info["Plate"] == plate].copy()
-#     table["log_length"] = np.log10((table["tot_length_C"] + 1).astype(float))
-#     table["is_rh"] = (table["log_length"] >= 3.36).astype(int)
-#     table = table.set_index("hypha")
-#     hyphaes = table.loc[
-#         (table["strop_track"] >= t)
-#         & (table["timestep_init_growth"] <= t)
-#         & ((table["out_of_ROI"].isnull()) | (table["out_of_ROI"] > t))
-#     ]
-#     if rh_only:
-#         selection_hypha = hyphaes.loc[(hyphaes["is_rh"] == 1)].index
-#
-#     else:
-#         selection_hypha = hyphaes
-#     nodes = get_nodes_in_ring(hull1, hull2, t, exp)
-#     tips = [
-#         node
-#         for node in nodes
-#         if node.degree(t) == 1 and node.is_in(t + 1) and len(node.ts()) > 2
-#     ]
-#     growing_tips = [
-#         node.label
-#         for node in tips
-#         if np.linalg.norm(node.pos(t) - node.pos(node.ts()[-1])) >= 40
-#     ]
-#     select_time = time_hypha_info.loc[time_hypha_info["Plate"] == plate]
-#     rh_ring = select_time.loc[
-#         (select_time["end"].isin(selection_hypha))
-#         & (select_time["end"].isin(hyphae_ring))
-#         & (select_time["end"].isin(growing_tips))
-#         & (select_time["timestep"] == t)
-#         & (select_time["speed"] >= 50)
-#     ]
-#     speed_ring = np.mean(rh_ring["speed"])
-#     return speed_ring
 
 
 def get_density_in_ring(exp, t, args):
@@ -113,22 +50,22 @@ def get_density_in_ring_new_fixed(exp, t, args):
         return (f"ring_density_incr_fixex-{incr}_index-{i}-new", None)
 
 
-# def get_density_in_ring_new_bootstrap(exp, t, args):
-#     incr = args["incr"]
-#     i = args["i"]
-#     regular_hulls, indexes = get_regular_hulls_area_fixed(exp, range(exp.ts), incr)
-#     if i + 2 <= len(regular_hulls):
-#         hull1, hull2 = regular_hulls[i], regular_hulls[i + 1]
-#         res = get_density_in_ring_bootstrap(hull1, hull2, t, exp, n_resamples=1)
-#         if res is None:
-#             return (f"ring_density_incr-{incr}_index-{i}-boot", None)
-#         else:
-#             return (
-#                 f"ring_density_incr-{incr}_index-{i}-boot",
-#                 np.median(res.bootstrap_distribution),
-#             )
-#     else:
-#         return (f"ring_density_incr-{incr}_index-{i}_boot", None)
+def get_density_in_ring_new_bootstrap(exp, t, args):
+    incr = args["incr"]
+    i = args["i"]
+    regular_hulls, indexes = get_regular_hulls_area_fixed(exp, range(exp.ts), incr)
+    if i + 2 <= len(regular_hulls):
+        hull1, hull2 = regular_hulls[i], regular_hulls[i + 1]
+        res = get_density_in_ring_bootstrap(hull1, hull2, t, exp, n_resamples=1)
+        if res is None:
+            return (f"ring_density_incr-{incr}_index-{i}-boot", None)
+        else:
+            return (
+                f"ring_density_incr-{incr}_index-{i}-boot",
+                np.median(res.bootstrap_distribution),
+            )
+    else:
+        return (f"ring_density_incr-{incr}_index-{i}_boot", None)
 
 
 def get_std_density_in_ring_new_bootstrap(exp, t, args):
@@ -257,6 +194,7 @@ def get_density_stop_rate_in_ring(exp, t, args):
     else:
         return (f"ring_stop_density_incr-{incr}_index-{i}", None)
 
+
 def get_density_lost_track_in_ring(exp, t, args):
     incr = args["incr"]
     i = args["i"]
@@ -270,6 +208,7 @@ def get_density_lost_track_in_ring(exp, t, args):
         return (f"ring_stop_density_incr-{incr}_index-{i}", rate / area)
     else:
         return (f"ring_stop_density_incr-{incr}_index-{i}", None)
+
 
 def get_density_active_tips_in_ring(exp, t, args):
     incr = args["incr"]

@@ -9,7 +9,7 @@ from scipy import sparse
 from time import time_ns
 from amftrack.util.sys import temp_path
 from amftrack.util.dbx import upload
-import imageio
+import imageio.v2 as imageio
 import os
 
 i = int(sys.argv[-1])
@@ -26,8 +26,6 @@ imgs = []
 
 kernel = np.ones((3, 3), np.uint8)
 itera = 1
-resize = (2624, 1312)
-# resize = (2624, 2624)
 
 texts = list(select["folder"])
 fontScale = 3
@@ -37,7 +35,7 @@ id_unique = (
     + "_"
     + str(int(str(select["CrossDate"].iloc[0]).replace("'", "")))
 )
-for path in select["total_path"]:
+for k, path in enumerate(select["total_path"]):
     print(path)
     # print(folder)
     path_snap = path
@@ -46,6 +44,9 @@ for path in select["total_path"]:
 
     skel = skel_info["skeleton"]
     im = read_mat(path_snap + "/Analysis/raw_image.mat")["raw"]
+    size_image = im.shape
+    if k == 0:
+        resize = (2624, int(2624 * size_image[0] / size_image[1]))
     compressed = sparse.csr_matrix(
         (
             [1] * len(skel.nonzero()[0]),

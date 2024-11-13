@@ -228,7 +228,7 @@ def plot_anastomosis(exp, args=None):
         )
         cv2.imwrite(path, img)
         upload_path_im = os.path.join(upload_path, f"frame_{i}.png")
-        upload(path, upload_path_im)
+        # upload(path, upload_path_im)
     delete_files(paths_list)
 
 
@@ -255,64 +255,64 @@ def plot_width(exp, args=None):
         )
         cv2.imwrite(path, img)
         upload_path_im = os.path.join(upload_path, f"frame_{i}.png")
-        upload(path, upload_path_im)
+        # upload(path, upload_path_im)
     delete_files(paths_list)
 
-
-def plot_betweenness(exp, args=None):
-    paths_list = make_images_betweenness(exp)
-    id_unique = exp.unique_id
-    folder_analysis = exp.save_location.split("/")[-1]
-    upload_path = f"/{dir_drop}/{id_unique}/{folder_analysis}/validation/betweenness/"
-    texts = [(folder) for folder in list(exp.folders["folder"])]
-    fontScale = 3
-    color = (0, 255, 255)
-    for i, paths in enumerate(paths_list):
-        path = paths[0]
-        img = cv2.imread(path, cv2.IMREAD_COLOR)
-        anchor = img.shape[0] // 10, img.shape[1] // 10
-        cv2.putText(
-            img=img,
-            text=texts[i],
-            org=anchor,
-            fontFace=cv2.FONT_HERSHEY_TRIPLEX,
-            fontScale=fontScale,
-            color=color,
-            thickness=3,
-        )
-        cv2.imwrite(path, img)
-        upload_path_im = os.path.join(upload_path, f"frame_{i}.png")
-        upload(path, upload_path_im)
-    delete_files(paths_list)
-
-
-def plot_betweenness_random(exp, args=None):
-    paths_list = make_images_betweenness_random(exp)
-    id_unique = exp.unique_id
-    folder_analysis = exp.save_location.split("/")[-1]
-    upload_path = (
-        f"/{dir_drop}/{id_unique}/{folder_analysis}/validation/betweenness_random/"
-    )
-    texts = [(folder) for folder in list(exp.folders["folder"])]
-    fontScale = 3
-    color = (0, 255, 255)
-    for i, paths in enumerate(paths_list):
-        path = paths[0]
-        img = cv2.imread(path, cv2.IMREAD_COLOR)
-        anchor = img.shape[0] // 10, img.shape[1] // 10
-        cv2.putText(
-            img=img,
-            text=texts[i],
-            org=anchor,
-            fontFace=cv2.FONT_HERSHEY_TRIPLEX,
-            fontScale=fontScale,
-            color=color,
-            thickness=3,
-        )
-        cv2.imwrite(path, img)
-        upload_path_im = os.path.join(upload_path, f"frame_{i}.png")
-        upload(path, upload_path_im)
-    delete_files(paths_list)
+#
+# def plot_betweenness(exp, args=None):
+#     paths_list = make_images_betweenness(exp)
+#     id_unique = exp.unique_id
+#     folder_analysis = exp.save_location.split("/")[-1]
+#     upload_path = f"/{dir_drop}/{id_unique}/{folder_analysis}/validation/betweenness/"
+#     texts = [(folder) for folder in list(exp.folders["folder"])]
+#     fontScale = 3
+#     color = (0, 255, 255)
+#     for i, paths in enumerate(paths_list):
+#         path = paths[0]
+#         img = cv2.imread(path, cv2.IMREAD_COLOR)
+#         anchor = img.shape[0] // 10, img.shape[1] // 10
+#         cv2.putText(
+#             img=img,
+#             text=texts[i],
+#             org=anchor,
+#             fontFace=cv2.FONT_HERSHEY_TRIPLEX,
+#             fontScale=fontScale,
+#             color=color,
+#             thickness=3,
+#         )
+#         cv2.imwrite(path, img)
+#         upload_path_im = os.path.join(upload_path, f"frame_{i}.png")
+#         upload(path, upload_path_im)
+#     delete_files(paths_list)
+#
+#
+# def plot_betweenness_random(exp, args=None):
+#     paths_list = make_images_betweenness_random(exp)
+#     id_unique = exp.unique_id
+#     folder_analysis = exp.save_location.split("/")[-1]
+#     upload_path = (
+#         f"/{dir_drop}/{id_unique}/{folder_analysis}/validation/betweenness_random/"
+#     )
+#     texts = [(folder) for folder in list(exp.folders["folder"])]
+#     fontScale = 3
+#     color = (0, 255, 255)
+#     for i, paths in enumerate(paths_list):
+#         path = paths[0]
+#         img = cv2.imread(path, cv2.IMREAD_COLOR)
+#         anchor = img.shape[0] // 10, img.shape[1] // 10
+#         cv2.putText(
+#             img=img,
+#             text=texts[i],
+#             org=anchor,
+#             fontFace=cv2.FONT_HERSHEY_TRIPLEX,
+#             fontScale=fontScale,
+#             color=color,
+#             thickness=3,
+#         )
+#         cv2.imwrite(path, img)
+#         upload_path_im = os.path.join(upload_path, f"frame_{i}.png")
+#         upload(path, upload_path_im)
+#     delete_files(paths_list)
 
 
 # API = str(np.load(os.getenv("HOME") + "/pycode/API_drop.npy"))

@@ -1,14 +1,16 @@
 # AMF segmentation and analysis
-AMF segmentation
+Full code for paper "A traveling-wave strategy for plant-fungal
+trade"
 
 # System requirements
 
 ## Python version
-Code should run on Python >=3.7.
+Code should run on Python >=3.11.
 
 ## Parallel computing
 All the code for parallelization requires a HPC SLURM job system. Specifics may need to be worked 
-out in the case of large dataset handling.
+out in the case of large dataset handling. Most of the code will however run without it.
+
 
 # Setup
 
@@ -18,67 +20,26 @@ Installation should take less than 1 hour.
 
 ### Setting up environment
 
-From base folder:
-```
-virtualenv --python=python3 venv
-```
-(or replace `python3` by the path to the python version you want to clone.)
+- Install poetry : follow instructions [here](https://python-poetry.org/docs/)
 
-Launching environment:
-
+From base folder run:
 ```
-source venv/bin/activate
+poetry install
 ```
 
-### Install required packages
+You can then use the poetry environment to run all the code, notebooks and tests.
 
-Activate the environnement before launching
 
-`pip3 install -r requirements.txt`
 
-Additionnal packages to install:
 
-```bash
-git clone https://github.com/gattia/cycpd
-cd cycpd
-sudo python setup.py install
-```
-
-For github authentification 
-
-conda install gh --channel conda-forge 
-
-Install Fiji:
-
-Chose a location on the computer and download:
-https://imagej.net/software/fiji/downloads
-
-Install anisotropic filtering:
-
-Chose a location on the computer and download:
-http://forge.cbp.ens-lyon.fr/redmine/projects/anifilters
-
-### Install the package in editable mode
-
-For better display:
-
-`jupyter labextension install @jupyter-widgets/jupyterlab-manager`
-`jupyter lab build`
-
-### Install the package in editable mode
-
-To run from the base folder:
-(will run the setup.py script)
-`pip install -e .`
-
-### Local.env file
+## Local.env file
 
 Create a text file named `local.env` in the base folder
 (for example: `touch local.env`)
 
 And fill the file with the following lines and adapt them to your situation:
 
-All dropbox related fields can be filled with arbitrary strings. They are not necessary to the core functionning of the code but filling it is necessary for correct import of dependencies.
+All dropbox related fields (From `APP_KEY` onward) can be filled with arbitrary strings. They are not necessary to the core functionning of the code but filling it is necessary for correct import of dependencies.
 
 ```
 DATA_PATH=C:\Users\coren\Documents\PhD\Code\data_info.json
@@ -103,21 +64,63 @@ USER_ID=
 To have access to a path: 
 Always import from the util.sys
 
-# Demo notebooks
-Example of code showing network manipulation is provided in `test_network.ipynb`. It requires 
- test data that can be downloaded [here](https://figshare.com/articles/dataset/Untitled_Item/23902032) to run.
-The data folders must be stored at the following path:
-**storage_path** + "**test**". It should plot a small AMF network and display typical methods
-to access graph nodes and edges. It should run in less than 2 minutes.
+## Data
 
-Example of code generating the panels of figure 2
-is provided in `test_analysis.ipynb`.
-It requires the datatable made available 
-[here](https://figshare.com/articles/dataset/Example_of_post_processed_analysis_data_folder/23902035).
-`PATH_ANALYSIS` 
-should be updated to povide the path to the 
-root folder where this data can be unzipped.
-It should run in less than 30 minutes.
+- If the code is directly pulled from **figshare**, 
+data is included and path should be consistent. 
+This includes source data for all main figures as well as a subsample of 
+raw data to demonstrate the functioning of the pipeline.
+
+- If the code is cloned from GitHub, 
+data must manually be downloaded from figshare and then path needs 
+being adapted in `test`, `test_notebooks` and `Figure_plots`(default is inconsistent)
+
+## External tools used 
+
+Those tools are not necessary to run the core part of the pipeline. 
+Neither are they necessary to reproduce main figures.
+These can be ignored in a first installation.
+
+### Fiji:
+- This is only necessary for image stitching (first step of the pipeline)
+- Chose a location on the computer and download:
+https://imagej.net/software/fiji/downloads
+
+
+### anisotropic filtering:
+
+- This is only necessary for "optimal" skeleton image segmentation
+- Chose a location on the computer and download:
+http://forge.cbp.ens-lyon.fr/redmine/projects/anifilters
+
+# Reproducibility
+
+## Generating Main Figures
+
+- Python notebooks generating Fig. 2, 3 and 5 can be found
+in `Figure_plots` folder. It uses source data that is directly incorporated in the figshare repo.
+
+- Figure 4 can be generated using the Matlab script... #TODO
+
+- All the External data figures can be reproduced with the corresponding notebooks provided in `Figure_plots` folder.
+
+## Reproducing the pipeline
+
+- All the steps of the pipeline can be reproduced on the example dataset provided
+by running. `poetry run python -m unittest .\test\pipeline\test_image_analysis.py`
+- All the post-processing steps that generate the datatables can be reproduced 
+with `poetry run python -m unittest .\test\pipeline\test_post_processing.py`
+
+## Flow analysis
+
+- All the code related to flow analysis can be found in #TODO
+
+## Demo notebooks
+Example of code showing network manipulation is provided in `test/test_network.ipynb`. It requires 
+ test data that can be downloaded [here](https://figshare.com/articles/dataset/Untitled_Item/23902032) to run.
+(pulling the global figshare repo should otherwise suffice)
+It should plot a small AMF network and display typical methods
+to access graph nodes and edges. It should run in less than 2 minutes. 
 
 
 # Presentation of the repository
@@ -153,6 +156,8 @@ dependencies are necessary for proper functioning of import statements.
 ## util
 Contains useful functions to the whole repository.
 
+
+
 ## test
 
 
@@ -161,12 +166,12 @@ Contains useful functions to the whole repository.
 ### Launching tests
 Tests can be launched with the following command:
 ```
-python3 -m unittest discover . "test*.py"
+poetry run python -m unittest discover . "test*.py"
 ```
 
 Runing only one test:
 ```
-python3 -m unittest -v ~/Wks/AMFtrack/test/util/test_geometry.py
+poetry run python -m unittest -v ~/Wks/AMFtrack/test/util/test_geometry.py
 ```
 
 Test can also be run with `pytest` if installed (prettier display)
@@ -175,12 +180,12 @@ pytest test_file.py -k test_function
 ```
 
 ### Special tests
-For some tests, a processed plate is required. Or other types of files.
-Such test data can be downloaded at [this link](https://figshare.com/articles/dataset/Untitled_Item/23902032) .
-The data folders must be stored at the following path:
-**storage_path** + "**test**".
+For some tests, a processed plate is required. This is directly included when pulling the
+whole package from figshare.
+Otherwise, such test data can be downloaded at [this link](https://figshare.com/articles/dataset/Untitled_Item/23902032) .
+The data folders must be stored at the path `path_data`.
 If the data is not present, the tests will be skipped.
-The tests can be safely run even if to test/ directory is present.
+The tests can be safely run even if no `path_data` directory is present.
 
 Some tests create and save plots in the **test** directory.
 These files don't accumulate (they are just replace at each test).
@@ -200,4 +205,24 @@ As a result:
 
 # Model simulations
 
-Notebooks generating the figure for model simulations can be found at https://github.com/Cocopyth/model_integration. Proper installation of requirement.txt via `pip install -r requirement.txt` should be sufficient to run all the notebooks.
+Notebooks generating the figure for model simulations can be found
+at https://github.com/Cocopyth/model_integration. 
+
+It requires installing dolfin 2019.2.0.dev0 which cannot easily be
+done within a poetry environment. 
+
+
+# Future development
+
+This repository is a "freezed" version of code developed for mycorrhizal network analysis 
+at the time of publication and is meant for reproducibility.
+For researcher interested in using similar technique for their research, 
+I advise the following:
+
+- For everything related to **segmentation** of "filaments", depending on imaging specificities, this code may not be
+readily used. One can explore the use of frangi filters, bowler hat filters and anisotropic filtering and maybe reuse
+some of the functions of this repository.
+- For everything related to **tracking** of hyphae, the method developped for this paper is analogous to tracking as it
+can be done with Spatio-temporal hypergraph. I advise to consult the following
+[library](https://github.com/amin942001/STHype/tree/hypergraph_class) where demo notebooks provide a good overview.
+- The **flow analysis** is currently being implemented in python. First releases will be posted here.
