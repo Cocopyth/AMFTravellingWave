@@ -424,8 +424,7 @@ def get_analysis_info(directory, suffix_analysis_info=""):
 
 
 def get_analysis_folders(path=path_analysis):
-    analysis_folders_list = []  # Store each infos DataFrame here
-
+    analysis_folders = pd.DataFrame()
     for dire in os.walk(path):
         name_analysis = dire[0].split(os.sep)[-1].split("_")
         if name_analysis[0] == "Analysis":
@@ -433,7 +432,7 @@ def get_analysis_folders(path=path_analysis):
             path_save = os.path.join(analysis_dir, "folder_info.json")
             if os.path.exists(path_save):
                 folders_plate = pd.read_json(path_save)
-                infos = folders_plate.iloc[0][1:10].copy()  # Copy to avoid SettingWithCopyWarning
+                infos = folders_plate.iloc[0][1:]
                 infos["total_path"] = analysis_dir
                 infos["time_plate"] = os.path.isfile(
                     os.path.join(analysis_dir, "time_plate_info.json")
@@ -444,20 +443,18 @@ def get_analysis_folders(path=path_analysis):
                 infos["time_hypha"] = os.path.isdir(
                     os.path.join(analysis_dir, "time_hypha_info.json")
                 )
+
                 infos["num_folders"] = len(folders_plate)
+                analysis_folders = pd.concat([analysis_folders, infos], axis=1)
 
-                # Append the infos DataFrame to the list
-                analysis_folders_list.append(infos)
-
-    # Concatenate all infos DataFrames at once
-    analysis_folders = pd.concat(analysis_folders_list, axis=1).transpose().reset_index(drop=True)
+    analysis_folders = analysis_folders.transpose().reset_index().drop("index", axis=1)
     analysis_folders["unique_id"] = (
-            analysis_folders["Plate"].astype(str)
-            + "_"
-            + analysis_folders["CrossDate"].astype(str).str.replace("'", "")
+        analysis_folders["Plate"].astype(str)
+        + "_"
+        + analysis_folders["CrossDate"].astype(str).str.replace("'", "")
     )
-
     return analysis_folders
+
 
 def get_time_plate_info_from_analysis(analysis_folders, use_saved=True):
     plates_in = analysis_folders["unique_id"].unique()

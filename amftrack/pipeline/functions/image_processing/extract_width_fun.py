@@ -14,7 +14,7 @@ from amftrack.pipeline.functions.image_processing.experiment_class_surf import (
 )
 from amftrack.util.geometry import get_section_segment, generate_index_along_sequence
 from amftrack.util.image_analysis import is_in_image, find_image_indexes
-from tensorflow import keras
+# from tensorflow import keras
 
 logger = logging.getLogger(os.path.basename(__file__))
 
@@ -26,9 +26,9 @@ a = 2.3196552
 # QUICKFIX: temporary
 TARGET_LENGTH = 120
 # MODEL = keras.models.load_model(os.path.join(path_code[:-1], "ml", "models", "default_model"))
-MODEL = keras.models.load_model(
-    os.path.join(path_code[:-1], "ml", "models", "default_CNN_model.h5")
-)
+# MODEL = keras.models.load_model(
+#     os.path.join(path_code[:-1], "ml", "models", "default_CNN_model.h5")
+# )
 # TARGET_LENGTH = 80
 # MODEL = keras.models.load_model(os.path.join(path_code[:-1], "ml", "models", "CNN_combine_HB_crop_80_best_model"))
 
