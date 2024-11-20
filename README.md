@@ -67,7 +67,7 @@ Always import from the util.sys
 ## Data
 
 - If the code is directly pulled from **figshare**, 
-data is included and path should be consistent. 
+data is included and paths should be consistent. 
 This includes source data for all main figures as well as a subsample of 
 raw data to demonstrate the functioning of the pipeline.
 
@@ -95,7 +95,7 @@ http://forge.cbp.ens-lyon.fr/redmine/projects/anifilters
 
 # Reproducibility
 
-## Generating Main Figures
+## Generating  Figures
 
 - Python notebooks generating Fig. 2, 3 and 5 can be found
 in `Figure_plots` folder. It uses source data that is directly incorporated in the figshare repo.
@@ -113,8 +113,17 @@ with `poetry run python -m unittest .\test\pipeline\test_post_processing.py`
 
 ## Flow analysis
 
-- All the code related to flow analysis can be found in #TODO
+- All the code related to flow analysis can be found in `flow_analysis`. 
+Readme tutorials are provided to reproduce the main steps. 
 
+## Network efficiency and BAS extraction
+- This code is made in matlab, scripts and readme are provided in `Figure_plots/Fig4` folder
+
+## DAPI staining nuclei analysis
+
+- All the code related to extracting nuclear density from images can be found 
+in `flow_analysis`. 
+Readme tutorials are provided to reproduce the main steps.
 ## Demo notebooks
 Example of code showing network manipulation is provided in `test/test_network.ipynb`. It requires 
  test data that can be downloaded [here](https://figshare.com/articles/dataset/Untitled_Item/23902032) to run.
@@ -123,7 +132,7 @@ It should plot a small AMF network and display typical methods
 to access graph nodes and edges. It should run in less than 2 minutes. 
 
 
-# Presentation of the repository
+# Presentation of the `amftrack` repository
 ## ml
 Contains code related to width extraction that is not relevant 
 to this article but which dependencies are necessary for proper import statements.
