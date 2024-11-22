@@ -42,13 +42,13 @@ And fill the file with the following lines and adapt them to your situation:
 All dropbox related fields (From `APP_KEY` onward) can be filled with arbitrary strings. They are not necessary to the core functionning of the code but filling it is necessary for correct import of dependencies.
 
 ```
-DATA_PATH=C:\Users\coren\Documents\PhD\Code\data_info.json
-FIJI_PATH=C:\Users\coren\Documents\PhD\Code\fiji-win64\Fiji.app/ImageJ-win64.exe
-TEMP_PATH=C:\Users\coren\Documents\PhD\Code\temp
-STORAGE_PATH=C:\Users\coren\Documents\PhD\Code
-PASTIS_PATH=/home/ipausers/bisot/anis_filter/anifilters/bin/ani2D
-SLURM_PATH=/data/temp
-SLURM_PATH_transfer=/data/temp
+DATA_PATH=C:\Users\coren\Documents\Code\data_info.json
+FIJI_PATH=C:\Users\coren\Documents\Code\fiji-win64\Fiji.app/ImageJ-win64.exe
+TEMP_PATH=C:\Users\coren\Documents\Code\temp
+STORAGE_PATH=C:\Users\coren\Documents\Code
+PASTIS_PATH=C:\Users\coren\Documents\Code/anis_filter/anifilters/bin/ani2D
+SLURM_PATH=C:\Users\coren\Documents\Code\temp
+SLURM_PATH_transfer=C:\Users\coren\Documents\Code\temp
 DROPBOX_PATH = C:\Users\coren\AMOLF-SHIMIZU Dropbox\DATA\PRINCE
 PATH_ANALYSIS = C:\Users\coren\AMOLF-SHIMIZU Dropbox\DATA\PRINCE_ANALYSIS
 CONDA_PATH = /home/cbisot/miniconda3/etc/profile.d/conda.sh
