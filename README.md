@@ -100,7 +100,7 @@ http://forge.cbp.ens-lyon.fr/redmine/projects/anifilters
 - Python notebooks generating Fig. 2, 3 and 5 can be found
 in `Figure_plots` folder. It uses source data that is directly incorporated in the figshare repo.
 
-- Figure 4 can be generated using the Matlab script... #TODO
+- Figure 4 can be generated using the Matlab script that can be found in the `Figure_plots/Fig4` folder.
 
 - All the External data figures can be reproduced with the corresponding notebooks provided in `Figure_plots` folder.
 
