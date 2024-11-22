@@ -69,7 +69,7 @@ Always import from the util.sys
 - If the code is directly pulled from **figshare**, 
 data is included and paths should be consistent. 
 This includes source data for all main figures as well as a subsample of 
-raw data to demonstrate the functioning of the pipeline.
+raw data to demonstrate the functioning of the pipeline. The **fighsare** doi is _10.6084/m9.figshare.27889143_
 
 - If the code is cloned from GitHub, 
 data must manually be downloaded from figshare and then path needs 
