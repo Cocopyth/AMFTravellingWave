@@ -1,6 +1,5 @@
 # AMF segmentation and analysis
-Full code for paper "A traveling-wave strategy for plant-fungal
-trade"
+Full code for paper [Oyarte Galvez, L., Bisot, C., Bourrianne, P. et al. A travelling-wave strategy for plant–fungal trade. Nature 639, 172–180 (2025)](https://www.nature.com/articles/s41586-025-08614-x).
 
 # System requirements
 
